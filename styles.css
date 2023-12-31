@@ -1,0 +1,40 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	overflow-y: hidden;
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+}
+
+#canvas1 {
+	width: 100vw;
+	height: 100vh;
+	background-color: #14001f;
+}
+
+/* #canvas2 {
+	width: 100vw;
+	height: 100vh;
+	border: 10px solid #fe9fb6;
+} */
+
+.links {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+a {
+	font-size: 24px;
+	color: white;
+	/* text-decoration: none; */
+	cursor: pointer;
+}
