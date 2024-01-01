@@ -13,28 +13,28 @@ body {
 	height: 100vh;
 }
 
-#canvas1 {
+canvas {
 	width: 100vw;
 	height: 100vh;
-	background-color: #14001f;
 }
 
-/* #canvas2 {
-	width: 100vw;
-	height: 100vh;
-	border: 10px solid #fe9fb6;
-} */
+#canvas1 {
+	background-color: #031d42;
+}
 
 .links {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	list-style: none;
 }
 
 a {
 	font-size: 24px;
 	color: white;
-	/* text-decoration: none; */
 	cursor: pointer;
 }

@@ -24,7 +24,7 @@ function createCircle({ x, y }) {
 	ctx.fillStyle = '#9fb6fe';
 	ctx.strokeStyle = '#B6FE9F';
 	ctx.lineWidth = 5;
-	ctx.arc(x, y, 30, 0, Math.PI * 2);
+	ctx.arc(x, y, 10, 0, Math.PI * 2);
 	ctx.fill();
 	ctx.stroke();
 }
