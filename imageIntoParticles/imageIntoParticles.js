@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 ctx.font = '14px Roboto';
 ctx.strokeText('Hover over the image!', 15, 10);
 
-let paritcles = [];
+let particles = [];
 const cursor = {
 	x: null,
 	y: null,
@@ -72,14 +72,14 @@ function drawImage() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	function init() {
-		paritcles = [];
+		particles = [];
 
 		for (let y = 0, y2 = data.height; y < y2; y++) {
 			for (let x = 0, x2 = data.width; x < x2; x++) {
 				if (data.data[y * 4 * data.width + x * 4 + 3] > 128) {
 					let positionX = x;
 					let positionY = y;
-					paritcles.push(new Particle(positionX * 4, positionY * 4));
+					particles.push(new Particle(positionX * 4, positionY * 4));
 				}
 			}
 		}
@@ -88,8 +88,8 @@ function drawImage() {
 		requestAnimationFrame(animate);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		for (let i = 0; i < paritcles.length; i++) {
-			paritcles[i].update();
+		for (let i = 0; i < particles.length; i++) {
+			particles[i].update();
 		}
 	}
 	init();
