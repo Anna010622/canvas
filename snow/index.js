@@ -2,43 +2,76 @@ const canvas = document.querySelector('#canvasSnow');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const PARTICLE_COUNT = 50;
 const particles = [];
+const image = document.querySelector('.snowflake');
+const frameSize = 500;
+let particleCount = 0;
+
+const changeParticleCount = () => {
+	if (canvas.width < 768) particleCount = 5;
+	if (canvas.width >= 768) particleCount = 15;
+	if (canvas.width >= 1200) particleCount = 25;
+};
+changeParticleCount();
 
 class Particle {
 	constructor() {
-		this.x = Math.random() * canvas.width;
-		this.y = Math.random() * -canvas.height;
-		this.radius = Math.random() * 8 + 1;
+		this.size = Math.floor(Math.random() * 35 + 10);
+		this.x = Math.floor(
+			Math.random() * (canvas.width - this.size / 2) + this.size / 2
+		);
+		this.y = Math.floor(Math.random() * -canvas.height);
 		this.initialX = this.x;
 		this.initialY = this.y;
-		this.swayDirection = Math.random() > 0.5 ? -0.1 : 0.1;
-		this.color = `rgba(255, 255, 255, ${Math.random() + 0.2})`;
-		this.fallingSpeed = Math.random() + 0.5;
+		this.sway = Math.random() > 0.5 ? -0.2 : 0.2;
+		this.fallingSpeed = Math.random() * 0.5 + 0.5;
+		this.angle = 0;
+		this.spin = Math.random() > 0.5 ? 0.3 : -0.3;
+		this.frameX = Math.floor(Math.random() * 2) * frameSize;
+		this.frameY = Math.floor(Math.random() * 3) * frameSize;
+		this.center = -this.size / 2;
 	}
 
 	draw() {
-		const { x, y, radius, color } = this;
+		const { x, y, size, frameX, frameY, angle, center } = this;
 
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.arc(x, y, radius, 0, Math.PI * 2);
-		ctx.fill();
+		ctx.save();
+		ctx.translate(x, y);
+		ctx.rotate((angle * Math.PI) / 180);
+		ctx.drawImage(
+			image,
+			frameX,
+			frameY,
+			frameSize,
+			frameSize,
+			center,
+			center,
+			size,
+			size
+		);
+		ctx.restore();
 	}
 
 	update() {
-		if (this.y > canvas.height) this.y = this.initialY;
+		if (this.y > canvas.height + this.size) this.y = this.initialY;
 		this.y += this.fallingSpeed;
 
-		this.x += this.swayDirection;
-		if (this.x > this.initialX + 10 || this.x < this.initialX - 10) {
-			this.swayDirection *= -1;
+		this.x += this.sway;
+		if (
+			this.x > this.initialX + this.size * 2 ||
+			this.x < this.initialX - this.size * 2 ||
+			this.x > canvas.width - this.size / 2 ||
+			this.x < this.size / 2
+		) {
+			this.sway *= -1;
 		}
+
+		this.angle += this.spin;
 	}
 }
 
 const createParticles = () => {
-	for (var i = 0; i < PARTICLE_COUNT; i++) {
+	for (var i = 0; i < particleCount; i++) {
 		particles.push(new Particle());
 	}
 };
@@ -58,5 +91,6 @@ window.addEventListener('resize', () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	particles.length = 0;
+	changeParticleCount();
 	createParticles();
 });
