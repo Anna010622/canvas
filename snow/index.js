@@ -8,9 +8,9 @@ const frameSize = 500;
 let particleCount = 0;
 
 const changeParticleCount = () => {
-	if (canvas.width < 768) particleCount = 5;
-	if (canvas.width >= 768) particleCount = 15;
-	if (canvas.width >= 1200) particleCount = 25;
+	if (canvas.width < 768) particleCount = 15;
+	if (canvas.width >= 768) particleCount = 25;
+	if (canvas.width >= 1200) particleCount = 35;
 };
 changeParticleCount();
 
@@ -23,8 +23,9 @@ class Particle {
 		this.y = Math.floor(Math.random() * -canvas.height);
 		this.initialX = this.x;
 		this.initialY = this.y;
-		this.sway = Math.random() > 0.5 ? -0.2 : 0.2;
-		this.fallingSpeed = Math.random() * 0.5 + 0.5;
+		this.sway = Math.random() > 0.5 ? -0.01 : 0.01;
+		this.swayAngle = 0;
+		this.fallingSpeed = Math.random() + 0.5;
 		this.angle = 0;
 		this.spin = Math.random() > 0.5 ? 0.3 : -0.3;
 		this.frameX = Math.floor(Math.random() * 2) * frameSize;
@@ -56,15 +57,8 @@ class Particle {
 		if (this.y > canvas.height + this.size) this.y = this.initialY;
 		this.y += this.fallingSpeed;
 
-		this.x += this.sway;
-		if (
-			this.x > this.initialX + this.size * 2 ||
-			this.x < this.initialX - this.size * 2 ||
-			this.x > canvas.width - this.size / 2 ||
-			this.x < this.size / 2
-		) {
-			this.sway *= -1;
-		}
+		this.x = this.x + Math.sin(this.swayAngle) / 2;
+		this.swayAngle += this.sway;
 
 		this.angle += this.spin;
 	}
