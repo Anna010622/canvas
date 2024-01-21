@@ -9,15 +9,15 @@ const frameSize = 500;
 let particleCount = 0;
 
 const changeParticleCount = () => {
-	if (canvas.width < 768) particleCount = 15;
-	if (canvas.width >= 768) particleCount = 25;
-	if (canvas.width >= 1200) particleCount = 35;
+	if (canvas.width < 768) particleCount = 30;
+	if (canvas.width >= 768) particleCount = 50;
+	if (canvas.width >= 1200) particleCount = 70;
 };
 changeParticleCount();
 
 class Particle {
 	constructor() {
-		this.size = Math.floor(Math.random() * 35 + 10);
+		this.size = Math.floor(Math.random() * 50 + 10);
 		this.x = Math.floor(
 			Math.random() * (canvas.width - this.size / 2) + this.size / 2
 		);
@@ -72,15 +72,13 @@ const createParticles = () => {
 };
 createParticles();
 
-const animate = () => {
+export default function animateSnowflakes() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	particles.forEach(particle => {
 		particle.update();
 		particle.draw();
 	});
-	requestAnimationFrame(animate);
-};
-animate();
+}
 
 window.addEventListener('resize', () => {
 	canvas.width = window.innerWidth;

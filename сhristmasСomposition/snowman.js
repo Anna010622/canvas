@@ -59,7 +59,7 @@ function returnEyeToOriginPosition() {
 	}
 }
 
-function animate() {
+export default function drawSnowman() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	ctx.drawImage(snowmanBody, x, y, snowmanWidth, snowmanHeight);
@@ -69,10 +69,4 @@ function animate() {
 	returnEyeToOriginPosition();
 
 	ctx.drawImage(snowmanNose, x, y, snowmanWidth, snowmanHeight);
-
-	requestAnimationFrame(animate);
 }
-
-snowmanBody.addEventListener('load', () => {
-	animate();
-});
