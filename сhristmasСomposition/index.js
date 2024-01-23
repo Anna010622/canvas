@@ -1,16 +1,25 @@
 import drawSnowman from './snowman.js';
 import animateSnowflakes from './snow.js';
 
-let clicked = false;
 const formEl = document.querySelector('.form');
+const titleEl = document.querySelector('.title');
+
+let clicked = false;
+let inputText = '';
+
 formEl.addEventListener('submit', e => {
 	e.preventDefault();
-	clicked = true;
-	console.log('click');
+	if (formEl[0].value.toLowerCase() === 'Merry Christmas'.toLowerCase()) {
+		clicked = true;
+		titleEl.className = 'hidden';
+		formEl.className = 'hidden';
+		// inputText = '';
+	}
+	console.log(formEl[0].value);
 });
 
 function animate() {
-	drawSnowman();
+	drawSnowman(inputText);
 
 	if (clicked) {
 		animateSnowflakes();
@@ -20,3 +29,7 @@ function animate() {
 }
 
 window.addEventListener('load', animate);
+
+formEl[0].addEventListener('input', event => {
+	inputText = event.target.value;
+});

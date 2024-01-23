@@ -2,41 +2,38 @@ const canvas = document.getElementById('snowman');
 const ctx = canvas.getContext('2d');
 
 const snowmanBody = new Image();
-snowmanBody.src = '../assets/snowman1.svg';
+snowmanBody.src = '../assets/snowman2.svg';
 const snowmanNose = new Image();
 snowmanNose.src = '../assets/nose.svg';
 
-const scaleFactor = 1.3;
+const scaleFactor = 2;
 const snowmanWidth = 200 * scaleFactor;
 const snowmanHeight = 250 * scaleFactor;
 
-const x = canvas.width - (snowmanWidth + canvas.width * 0.1);
-const y = canvas.height - (snowmanHeight + canvas.height * 0.1);
-
 const eyeRadius = (snowmanWidth * 0.06) / 2;
-const eyeX = x + snowmanWidth / 2 - eyeRadius * 2.5;
-const eyeY = y + snowmanHeight * 0.3;
+let eyeX = snowmanWidth / 2;
+let eyeY = snowmanHeight * 0.27;
 
-const rangeXEye = snowmanWidth * 0.08;
-const minXEye = eyeX - rangeXEye / 2;
+const rangeXEye = eyeRadius * 3;
+const minXEye = eyeX - eyeRadius * 1.5;
 let percentageX = 0;
 
-const rangeYEye = snowmanWidth * 0.08;
-const minYEye = eyeY - rangeYEye / 2;
+const rangeYEye = eyeRadius * 3.5;
+const minYEye = eyeY - eyeRadius * 2;
 let percentageY = 0;
 
 let mouseMoved = false;
 let lastMouseMoveTime = 0;
 
-canvas.addEventListener('mousemove', event => {
+window.addEventListener('mousemove', event => {
 	mouseMoved = true;
-	percentageX = event.offsetX / canvas.width;
-	percentageY = event.offsetY / canvas.width;
+	percentageX = event.screenX / window.innerWidth;
+	percentageY = event.screenY / window.innerHeight;
 
 	lastMouseMoveTime = Date.now();
 });
 
-function getEyeCoordinates() {
+export function calculateEyePositionFromMouse() {
 	const eyeXNew = mouseMoved ? minXEye + rangeXEye * percentageX : eyeX;
 	const eyeYNew = mouseMoved ? minYEye + rangeYEye * percentageY : eyeY;
 	return {
@@ -45,11 +42,27 @@ function getEyeCoordinates() {
 	};
 }
 
-function drawEyes({ eyeX, eyeY }) {
+export function drawEyes({ eyeX, eyeY }) {
 	ctx.beginPath();
-	ctx.arc(eyeX - eyeRadius * 3, eyeY, eyeRadius, 0, Math.PI * 2);
-	ctx.arc(eyeX + eyeRadius * 3, eyeY, eyeRadius, 0, Math.PI * 2);
+	ctx.fillStyle = 'black';
+	ctx.arc(eyeX - eyeRadius * 4, eyeY, eyeRadius, 0, Math.PI * 2);
+	ctx.arc(eyeX + eyeRadius * 4, eyeY, eyeRadius, 0, Math.PI * 2);
 	ctx.fill();
+	ctx.beginPath();
+	ctx.fillStyle = 'white';
+	ctx.arc(eyeX - eyeRadius * 4 + 4, eyeY - 4, eyeRadius / 4, 0, Math.PI * 2);
+	ctx.arc(eyeX + eyeRadius * 4 + 4, eyeY - 4, eyeRadius / 4, 0, Math.PI * 2);
+	ctx.fill();
+}
+export function drawEyesHappy() {
+	ctx.beginPath();
+	ctx.fillStyle = 'black';
+	ctx.lineWidth = 4;
+	ctx.arc(eyeX - eyeRadius * 4, eyeY, eyeRadius, 85, Math.PI * 2);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.arc(eyeX + eyeRadius * 4, eyeY, eyeRadius, 85, Math.PI * 2);
+	ctx.stroke();
 }
 
 function returnEyeToOriginPosition() {
@@ -59,14 +72,47 @@ function returnEyeToOriginPosition() {
 	}
 }
 
-export default function drawSnowman() {
+function calculateEyePositionFromInput(inputText) {
+	const percentageT = inputText.length / 15;
+
+	return {
+		eyeX: minXEye + rangeXEye * percentageT,
+		eyeY: eyeY + eyeRadius,
+	};
+}
+
+function drawShadow() {
+	ctx.beginPath();
+	ctx.fillStyle = '#c4d0df';
+	ctx.ellipse(
+		snowmanWidth / 2,
+		snowmanHeight - 15,
+		15,
+		150,
+		77,
+		0,
+		Math.PI * 2
+	);
+	ctx.fill();
+}
+
+export default function drawSnowman(inputText) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	ctx.drawImage(snowmanBody, x, y, snowmanWidth, snowmanHeight);
+	drawShadow();
 
-	const eyeCoordinates = getEyeCoordinates();
-	drawEyes(eyeCoordinates);
+	ctx.drawImage(snowmanBody, 0, 0, snowmanWidth, snowmanHeight);
+
+	const eyeCoordinates =
+		inputText?.length > 0
+			? calculateEyePositionFromInput(inputText)
+			: calculateEyePositionFromMouse();
+
+	if (inputText.toLowerCase() === 'Merry Christmas'.toLowerCase()) {
+		drawEyesHappy();
+	} else drawEyes(eyeCoordinates);
+
 	returnEyeToOriginPosition();
 
-	ctx.drawImage(snowmanNose, x, y, snowmanWidth, snowmanHeight);
+	ctx.drawImage(snowmanNose, 0, 0, snowmanWidth, snowmanHeight);
 }
