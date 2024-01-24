@@ -4,6 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
+		<link rel="stylesheet" href="./snowballPreloader.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -11,11 +12,25 @@
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href="./styles.css" />
-		<script src="./snowman.js" type="module"></script>
+		<script defer src="./snowman.js" type="module"></script>
 		<script defer src="./snow.js" type="module"></script>
-		<script src="./index.js" type="module"></script>
+		<script defer src="./index.js" type="module"></script>
 	</head>
 	<body>
+		<div class="preloader">
+			<div class="pl">
+				<div class="pl__outer-ring"></div>
+				<div class="pl__inner-ring"></div>
+				<div class="pl__track-cover"></div>
+				<div class="pl__ball">
+					<div class="pl__ball-texture"></div>
+					<div class="pl__ball-outer-shadow"></div>
+					<div class="pl__ball-inner-shadow"></div>
+					<div class="pl__ball-side-shadows"></div>
+				</div>
+			</div>
+		</div>
+
 		<main>
 			<div class="title-wrapper">
 				<h1 class="title">Write "Merry Christmas" and see what will happen</h1>
