@@ -4,11 +4,18 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
-		<link rel="stylesheet" href="../styles.css" />
 		<link rel="stylesheet" href="./paint.css" />
+		<script defer src="paint.js" type="module"></script>
 	</head>
 	<body>
-		<canvas id="canvas2"></canvas>
-		<script src="paint.js"></script>
+		<div class="container">
+			<div class="drawing-board">
+				<canvas id="canvasPain"></canvas>
+			</div>
+			<div class="panel">
+				<input id="color" type="color" value="#05166B" />
+				<input id="size" type="range" min="1" max="100" value="10" />
+			</div>
+		</div>
 	</body>
 </html>

@@ -1,30 +1,42 @@
-const canvas = document.getElementById('canvas2');
+const canvas = document.getElementById('canvasPain');
+const drawingBoardEl = document.querySelector('.drawing-board');
+const rangeEl = document.querySelector('#size');
+const colorEl = document.querySelector('#color');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let brushSize = 20;
+let color = colorEl.value;
+
+canvas.width = drawingBoardEl.clientWidth;
+canvas.height = drawingBoardEl.clientHeight;
 
 window.addEventListener('resize', () => {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	canvas.width = drawingBoardEl.clientWidth;
+	canvas.height = drawingBoardEl.clientHeight;
 });
 
 canvas.addEventListener('mousemove', drawCircle);
 
+rangeEl.addEventListener('input', event => {
+	brushSize = event.target.value;
+});
+
+colorEl.addEventListener('input', event => {
+	color = event.target.value;
+	console.log(color);
+});
+
 function drawCircle(event) {
 	const coordinates = {
-		x: event.x,
-		y: event.y,
+		x: event.offsetX,
+		y: event.offsetY,
 	};
 	createCircle(coordinates);
 }
 
 function createCircle({ x, y }) {
+	ctx.fillStyle = color;
 	ctx.beginPath();
-	ctx.fillStyle = '#9fb6fe';
-	ctx.strokeStyle = '#B6FE9F';
-	ctx.lineWidth = 5;
-	ctx.arc(x, y, 10, 0, Math.PI * 2);
+	ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
 	ctx.fill();
-	ctx.stroke();
 }

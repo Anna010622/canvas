@@ -1,5 +1,46 @@
-#canvas2 {
-	width: 100vw;
-	height: 100vh;
-	border: 10px solid #031d42;
+:root {
+	accent-color: #e4eaf2;
+
+	--main-light-color: #e4eaf2;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body,
+.container {
+	height: 100%;
+}
+
+body {
+	background-color: #2a303e;
+}
+#canvasPain {
+	background-color: var(--main-light-color);
+}
+.container {
+	display: flex;
+	gap: 20px;
+	width: 80%;
+	margin: 0 auto;
+	padding: 20px 0;
+}
+.drawing-board {
+	height: 100%;
+	width: 80%;
+	border-radius: 18px;
+	overflow: hidden;
+}
+.panel {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 20%;
+	padding: 20px;
+	border-radius: 18px;
+	border: 1px solid var(--main-light-color);
 }
