@@ -1,7 +1,5 @@
 :root {
-	accent-color: #e4eaf2;
-
-	--main-light-color: #e4eaf2;
+	accent-color: #ffe5d9;
 }
 
 * {
@@ -17,10 +15,11 @@ body,
 }
 
 body {
-	background-color: #2a303e;
+	background-color: #9d8189;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 #canvasPain {
-	background-color: var(--main-light-color);
+	background-color: #ffffff;
 }
 .container {
 	display: flex;
@@ -31,16 +30,94 @@ body {
 }
 .drawing-board {
 	height: 100%;
-	width: 80%;
+	flex-grow: 1;
 	border-radius: 18px;
 	overflow: hidden;
+	box-shadow: 1px 1px 7px 4px rgba(0, 0, 0, 0.3);
 }
+
 .panel {
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
-	width: 20%;
+	width: 200px;
 	padding: 20px;
 	border-radius: 18px;
-	border: 1px solid var(--main-light-color);
+
+	background-color: rgba(255, 202, 212, 0.6);
+	box-shadow: 1px 1px 7px 4px rgba(0, 0, 0, 0.3);
+}
+
+#color-picker {
+	width: 100%;
+	height: 42px;
+	cursor: pointer;
+	border-radius: 4px;
+	border: 0;
+}
+
+#resize {
+	cursor: grab;
+}
+
+.btn {
+	display: flex;
+	gap: 7px;
+	align-items: center;
+	justify-content: center;
+	background-color: #ffe5d9;
+	border-radius: 4px;
+	border-width: 0;
+	box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #cfb8ad 0 -3px 0 inset;
+	color: #36395a;
+	cursor: pointer;
+	font: inherit;
+	font-size: 18px;
+	height: 48px;
+
+	padding-left: 16px;
+	padding-right: 16px;
+	transition: box-shadow 0.15s, transform 0.15s;
+}
+.btn:hover {
+	box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d0bcb3 0 -3px 0 inset;
+	transform: translateY(-2px);
+}
+.btn:active {
+	box-shadow: #d0bcb3 0 3px 7px inset;
+	transform: translateY(2px);
+}
+
+#save-btn {
+	text-decoration: none;
+	background-color: #d8e2dc;
+	box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #bbc5bf 0 -3px 0 inset;
+}
+#save-btn:hover {
+	box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #bbc5bf 0 -3px 0 inset;
+	transform: translateY(-2px);
+}
+#save-btn:active {
+	box-shadow: #bbc5bf 0 3px 7px inset;
+	transform: translateY(2px);
+}
+
+#clear-btn {
+	background-color: #f4acb7;
+	box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #c78b94 0 -3px 0 inset;
+	color: #36395a;
+}
+#clear-btn:hover {
+	box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #c78b94 0 -3px 0 inset;
+	transform: translateY(-2px);
+}
+#clear-btn:active {
+	box-shadow: #c78b94 0 3px 7px inset;
+	transform: translateY(2px);
 }
