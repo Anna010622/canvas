@@ -18,9 +18,7 @@ body {
 	background-color: #9d8189;
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-#canvasPain {
-	background-color: #ffffff;
-}
+
 .container {
 	display: flex;
 	gap: 20px;
@@ -40,15 +38,27 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
-	width: 200px;
+	width: 250px;
 	padding: 20px;
 	border-radius: 18px;
 
 	background-color: rgba(255, 202, 212, 0.6);
 	box-shadow: 1px 1px 7px 4px rgba(0, 0, 0, 0.3);
+	user-select: none;
+}
+
+.title {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+/* settings */
+.settings {
+	margin-bottom: 16px;
 }
 
 #color-picker {
+	margin-bottom: 10px;
 	width: 100%;
 	height: 42px;
 	cursor: pointer;
@@ -58,6 +68,48 @@ body {
 
 #resize {
 	cursor: grab;
+	width: 100%;
+}
+
+/* tools */
+.tools {
+	list-style: none;
+	margin-bottom: 16px;
+}
+.tool {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	font-size: 18px;
+	cursor: pointer;
+	transition: color 300ms linear, transform 150ms linear;
+}
+.tool.active {
+	color: #ffffff;
+}
+
+.tool:hover {
+	color: #ffffff;
+	transform: translateY(-1px);
+}
+.tool:active {
+	transform: translateY(2px);
+}
+
+.tool img {
+	transition: filter 400ms linear;
+}
+.tool.active img,
+.tool:hover img {
+	filter: invert();
+}
+
+/* buttons */
+.buttons {
+	margin-top: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
 .btn {

@@ -13,24 +13,64 @@
 				<canvas id="canvasPain"></canvas>
 			</div>
 			<div class="panel">
-				<input id="color-picker" type="color" value="#73E2CC" />
-				<input id="resize" type="range" min="1" max="100" value="10" />
-				<button class="btn" id="back-btn">
-					<img src="../assets/paint/return.svg" alt="Icon return" width="30" />
-					Back
-				</button>
-				<a class="btn" href="#" id="save-btn">
-					<img
-						src="../assets/paint/download.svg"
-						alt="Icon download"
-						width="30"
-					/>
-					Save
-				</a>
-				<button class="btn" id="clear-btn">
-					<img src="../assets/paint/clear.svg" alt="Icon clear" width="30" />
-					Clear
-				</button>
+				<div class="settings">
+					<h2 class="title">Settings</h2>
+					<input id="color-picker" type="color" value="#73E2CC" />
+					<input id="resize" type="range" min="1" max="100" value="10" />
+				</div>
+
+				<div class="row">
+					<h2 class="title">Tools</h2>
+					<ul class="tools">
+						<li class="tool active" id="pencil">
+							<img
+								src="../assets/paint/pencil.svg"
+								alt="Icon pencil"
+								width="30"
+							/>
+							<span>Pencil</span>
+						</li>
+						<li class="tool" id="brush">
+							<img
+								src="../assets/paint/brush-with-drops.svg"
+								alt="Icon brush"
+								width="30"
+							/>
+							<span>Brush with drops</span>
+						</li>
+						<li class="tool" id="eraser">
+							<img
+								src="../assets/paint/eraser.svg"
+								alt="Icon eraser"
+								width="30"
+							/>
+							<span>Eraser</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="buttons">
+					<button class="btn" id="back-btn">
+						<img
+							src="../assets/paint/return.svg"
+							alt="Icon return"
+							width="30"
+						/>
+						Back
+					</button>
+					<a class="btn" href="#" id="save-btn">
+						<img
+							src="../assets/paint/download.svg"
+							alt="Icon download"
+							width="30"
+						/>
+						Save
+					</a>
+					<button class="btn" id="clear-btn">
+						<img src="../assets/paint/clear.svg" alt="Icon clear" width="30" />
+						Clear
+					</button>
+				</div>
 			</div>
 		</div>
 	</body>
