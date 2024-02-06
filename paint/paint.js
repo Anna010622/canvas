@@ -9,10 +9,13 @@ const toolsEl = document.querySelector('.tools');
 
 const history = [];
 
-let brushSize = 20;
+let brushSize = resizeEl.value;
 let color = colorPickerEl.value;
 let isDrawing = false;
 let selectedTool = 'pencil';
+let cursorX;
+let cursorY;
+let snapshot;
 
 const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
@@ -62,22 +65,43 @@ function clearCanvas() {
 }
 
 function startDrawing(event) {
-	drawCircle(event);
 	isDrawing = true;
+	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	cursorX = event.offsetX;
+	cursorY = event.offsetY;
+	if (
+		selectedTool === 'brush' ||
+		selectedTool === 'pencil' ||
+		selectedTool === 'eraser'
+	) {
+		drawDot(event);
+	}
 	ctx.lineWidth = brushSize;
 	ctx.strokeStyle = selectedTool === 'eraser' ? '#ffffff' : color;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 	ctx.beginPath();
+	ctx.moveTo(cursorX, cursorY);
 }
 
 function draw(event) {
 	if (!isDrawing) return;
-
 	if (selectedTool === 'pencil' || selectedTool === 'eraser') {
 		ctx.lineTo(event.offsetX, event.offsetY);
 		ctx.stroke();
 	} else if (selectedTool === 'brush') {
+		drawDot(event);
+	} else if (selectedTool === 'rectangle') {
+		ctx.putImageData(snapshot, 0, 0);
+		drawRectangle(event);
+	} else if (selectedTool === 'line') {
+		ctx.putImageData(snapshot, 0, 0);
+		drawLine(event);
+	} else if (selectedTool === 'triangle') {
+		ctx.putImageData(snapshot, 0, 0);
+		drawTriangle(event);
+	} else if (selectedTool === 'circle') {
+		ctx.putImageData(snapshot, 0, 0);
 		drawCircle(event);
 	}
 }
@@ -87,13 +111,42 @@ function stopDrawing() {
 	history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 }
 
-function drawCircle(event) {
+function drawDot(event) {
 	let x = event.offsetX;
 	let y = event.offsetY;
 	ctx.fillStyle = selectedTool === 'eraser' ? '#ffffff' : color;
 	ctx.beginPath();
 	ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
 	ctx.fill();
+}
+
+function drawCircle(e) {
+	const radius = Math.sqrt(
+		Math.pow(cursorX - e.offsetX, 2) + Math.pow(cursorY - e.offsetY, 2)
+	);
+	ctx.beginPath();
+	ctx.arc(cursorX, cursorY, radius, 0, Math.PI * 2);
+	ctx.stroke();
+}
+
+function drawRectangle(e) {
+	ctx.strokeRect(cursorX, cursorY, e.offsetX - cursorX, e.offsetY - cursorY);
+}
+
+function drawLine(e) {
+	ctx.beginPath();
+	ctx.moveTo(cursorX, cursorY);
+	ctx.lineTo(e.offsetX, e.offsetY);
+	ctx.stroke();
+}
+
+function drawTriangle(e) {
+	ctx.beginPath();
+	ctx.moveTo(cursorX, cursorY);
+	ctx.lineTo(e.offsetX, e.offsetY);
+	ctx.lineTo(cursorX * 2 - e.offsetX, e.offsetY);
+	ctx.closePath();
+	ctx.stroke();
 }
 
 function returnPreviousImage() {
