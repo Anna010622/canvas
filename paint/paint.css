@@ -22,7 +22,7 @@ body {
 .container {
 	display: flex;
 	gap: 20px;
-	width: 80%;
+	width: 90%;
 	margin: 0 auto;
 	padding: 20px 0;
 }
@@ -83,6 +83,10 @@ body {
 	font-size: 18px;
 	cursor: pointer;
 	transition: color 300ms linear, transform 150ms linear;
+
+	&:not(:last-child) {
+		padding-bottom: 10px;
+	}
 }
 .tool.active {
 	color: #ffffff;
@@ -110,6 +114,10 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+}
+.btn-wrapper {
+	display: flex;
+	justify-content: space-evenly;
 }
 
 .btn {
@@ -140,6 +148,10 @@ body {
 .btn:active {
 	box-shadow: #d0bcb3 0 3px 7px inset;
 	transform: translateY(2px);
+}
+
+#forward-btn img {
+	transform: rotate(180deg);
 }
 
 #save-btn {

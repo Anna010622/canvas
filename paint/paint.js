@@ -4,18 +4,20 @@ const resizeEl = document.querySelector('#resize');
 const colorPickerEl = document.querySelector('#color-picker');
 const clearBtnEl = document.querySelector('#clear-btn');
 const backBtnEl = document.querySelector('#back-btn');
+const forwardBtnEl = document.querySelector('#forward-btn');
 const saveBtnEl = document.querySelector('#save-btn');
 const toolsEl = document.querySelector('.tools');
 
 const history = [];
-
+const maxHistoryLength = 15;
+let historyIndex;
 let brushSize = resizeEl.value;
 let color = colorPickerEl.value;
 let isDrawing = false;
 let selectedTool = 'pencil';
 let cursorX;
 let cursorY;
-let snapshot;
+let lastSnapshot;
 
 const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
@@ -45,6 +47,7 @@ canvas.addEventListener('mouseenter', () => {
 
 clearBtnEl.addEventListener('click', clearCanvas);
 backBtnEl.addEventListener('click', returnPreviousImage);
+forwardBtnEl.addEventListener('click', returnNextImage);
 saveBtnEl.addEventListener('click', saveImage);
 
 function setCanvasSize() {
@@ -66,7 +69,7 @@ function clearCanvas() {
 
 function startDrawing(event) {
 	isDrawing = true;
-	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	lastSnapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	cursorX = event.offsetX;
 	cursorY = event.offsetY;
 	if (
@@ -92,16 +95,16 @@ function draw(event) {
 	} else if (selectedTool === 'brush') {
 		drawDot(event);
 	} else if (selectedTool === 'rectangle') {
-		ctx.putImageData(snapshot, 0, 0);
+		ctx.putImageData(lastSnapshot, 0, 0);
 		drawRectangle(event);
 	} else if (selectedTool === 'line') {
-		ctx.putImageData(snapshot, 0, 0);
+		ctx.putImageData(lastSnapshot, 0, 0);
 		drawLine(event);
 	} else if (selectedTool === 'triangle') {
-		ctx.putImageData(snapshot, 0, 0);
+		ctx.putImageData(lastSnapshot, 0, 0);
 		drawTriangle(event);
 	} else if (selectedTool === 'circle') {
-		ctx.putImageData(snapshot, 0, 0);
+		ctx.putImageData(lastSnapshot, 0, 0);
 		drawCircle(event);
 	}
 }
@@ -109,6 +112,8 @@ function draw(event) {
 function stopDrawing() {
 	isDrawing = false;
 	history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+	if (history.length > maxHistoryLength) history.shift();
+	historyIndex = history.length - 1;
 }
 
 function drawDot(event) {
@@ -150,9 +155,22 @@ function drawTriangle(e) {
 }
 
 function returnPreviousImage() {
-	history.pop();
+	if (historyIndex >= 0) historyIndex -= 1;
+	if (historyIndex === -1 && history.length < maxHistoryLength) {
+		setCanvasBackground();
+		return;
+	} else if (historyIndex === -1) return;
+
 	if (history.length === 0) return clearCanvas();
-	ctx.putImageData(history[history.length - 1], 0, 0);
+
+	ctx.putImageData(history[historyIndex], 0, 0);
+}
+
+function returnNextImage() {
+	if (historyIndex < history.length - 1) {
+		historyIndex += 1;
+		ctx.putImageData(history[historyIndex], 0, 0);
+	}
 }
 
 function saveImage() {
