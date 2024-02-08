@@ -1,4 +1,5 @@
 const canvas = document.getElementById('canvasPain');
+const cursor = document.querySelector('.cursor');
 const drawingBoardEl = document.querySelector('.drawing-board');
 const resizeEl = document.querySelector('#resize');
 const colorPickerEl = document.querySelector('#color-picker');
@@ -10,6 +11,7 @@ const toolsEl = document.querySelector('.tools');
 
 const history = [];
 const maxHistoryLength = 15;
+const canvasBGColor = '#ffffff';
 let historyIndex;
 let brushSize = resizeEl.value;
 let color = colorPickerEl.value;
@@ -23,6 +25,8 @@ const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
 
 setCanvasSize();
 setCanvasBackground();
+setCursorSize();
+setCursorBGColor();
 
 window.addEventListener('resize', () => {
 	setCanvasSize();
@@ -36,14 +40,8 @@ toolsEl.addEventListener('click', setTool);
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mouseout', () => {
-	if (!isDrawing) return;
-	document.addEventListener('mouseup', stopDrawing);
-});
-canvas.addEventListener('mouseenter', () => {
-	if (isDrawing) ctx.beginPath();
-	document.removeEventListener('mouseup', stopDrawing);
-});
+canvas.addEventListener('mouseout', handleMouseout);
+canvas.addEventListener('mouseenter', handleMouseenter);
 
 clearBtnEl.addEventListener('click', clearCanvas);
 backBtnEl.addEventListener('click', returnPreviousImage);
@@ -56,7 +54,7 @@ function setCanvasSize() {
 }
 
 function setCanvasBackground() {
-	ctx.fillStyle = '#ffffff';
+	ctx.fillStyle = canvasBGColor;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fill;
 }
@@ -80,7 +78,7 @@ function startDrawing(event) {
 		drawDot(event);
 	}
 	ctx.lineWidth = brushSize;
-	ctx.strokeStyle = selectedTool === 'eraser' ? '#ffffff' : color;
+	ctx.strokeStyle = selectedTool === 'eraser' ? canvasBGColor : color;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 	ctx.beginPath();
@@ -88,6 +86,7 @@ function startDrawing(event) {
 }
 
 function draw(event) {
+	drawCursor(event);
 	if (!isDrawing) return;
 	if (selectedTool === 'pencil' || selectedTool === 'eraser') {
 		ctx.lineTo(event.offsetX, event.offsetY);
@@ -119,7 +118,7 @@ function stopDrawing() {
 function drawDot(event) {
 	let x = event.offsetX;
 	let y = event.offsetY;
-	ctx.fillStyle = selectedTool === 'eraser' ? '#ffffff' : color;
+	ctx.fillStyle = selectedTool === 'eraser' ? canvasBGColor : color;
 	ctx.beginPath();
 	ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
 	ctx.fill();
@@ -181,10 +180,12 @@ function saveImage() {
 
 function updateBruchSize(event) {
 	brushSize = event.target.value;
+	setCursorSize();
 }
 
 function updateColor(event) {
 	color = event.target.value;
+	updateCursor();
 }
 
 function setTool(event) {
@@ -200,4 +201,50 @@ function setTool(event) {
 
 	liElement.classList.add('active');
 	selectedTool = toolId;
+
+	updateCursor();
+}
+
+function handleMouseout() {
+	cursor.style.opacity = 0;
+	if (!isDrawing) return;
+	document.addEventListener('mouseup', stopDrawing);
+}
+
+function handleMouseenter() {
+	cursor.style.opacity = 1;
+	if (isDrawing) ctx.beginPath();
+	document.removeEventListener('mouseup', stopDrawing);
+}
+
+function drawCursor(e) {
+	cursor.style.top = `${e.offsetY - brushSize / 2}px`;
+	cursor.style.left = `${e.offsetX - brushSize / 2}px`;
+}
+
+function updateCursor() {
+	if (
+		selectedTool === 'rectangle' ||
+		selectedTool === 'line' ||
+		selectedTool === 'triangle' ||
+		selectedTool === 'circle'
+	) {
+		canvas.style.cursor = 'move';
+		cursor.style.backgroundColor = color;
+	} else if (selectedTool === 'eraser') {
+		canvas.style.cursor = 'none';
+		cursor.style.backgroundColor = canvasBGColor;
+	} else {
+		canvas.style.cursor = 'none';
+		cursor.style.backgroundColor = color;
+	}
+}
+
+function setCursorSize() {
+	cursor.style.width = `${brushSize}px`;
+	cursor.style.height = `${brushSize}px`;
+}
+
+function setCursorBGColor() {
+	cursor.style.backgroundColor = color;
 }
