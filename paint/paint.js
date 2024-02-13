@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvasPain');
 const cursor = document.querySelector('.cursor');
 const drawingBoardEl = document.querySelector('.drawing-board');
+const brushSizeEl = document.querySelector('#brush-size');
 const resizeEl = document.querySelector('#resize');
 const colorPickerEl = document.querySelector('#color-picker');
 const clearBtnEl = document.querySelector('#clear-btn');
@@ -29,11 +30,20 @@ setCursorSize();
 setCursorBGColor();
 
 window.addEventListener('resize', () => {
-	setCanvasSize();
+	if (
+		drawingBoardEl.clientWidth > canvas.width ||
+		drawingBoardEl.clientHeight > canvas.height
+	) {
+		setCanvasSize();
+	}
 	setCanvasBackground();
+	const imgData = history[history.length - 1];
+	if (imgData) ctx.putImageData(imgData, 0, 0);
 });
 
-resizeEl.addEventListener('input', updateBruchSize);
+brushSizeEl.addEventListener('change', handleBrushSizeInput);
+brushSizeEl.addEventListener('wheel', handleBrushSizeScroll);
+resizeEl.addEventListener('change', handleBrushSizeInput);
 colorPickerEl.addEventListener('input', updateColor);
 toolsEl.addEventListener('click', setTool);
 
@@ -47,6 +57,13 @@ clearBtnEl.addEventListener('click', clearCanvas);
 backBtnEl.addEventListener('click', returnPreviousImage);
 forwardBtnEl.addEventListener('click', returnNextImage);
 saveBtnEl.addEventListener('click', saveImage);
+document.addEventListener('keydown', e => {
+	if (e.altKey && e.ctrlKey && e.code === 'KeyZ') {
+		returnNextImage();
+	} else if (e.code === 'KeyZ' && e.ctrlKey) {
+		returnPreviousImage();
+	}
+});
 
 function setCanvasSize() {
 	canvas.width = drawingBoardEl.clientWidth;
@@ -178,9 +195,36 @@ function saveImage() {
 	saveBtnEl.setAttribute('download', `${Date.now()}.jpg`);
 }
 
-function updateBruchSize(event) {
-	brushSize = event.target.value;
+function handleBrushSizeInput(event) {
+	const value = Math.round(event.target.value);
+	if (value < 1) {
+		setBrushSize(1);
+		return;
+	} else if (value > 100) {
+		setBrushSize(100);
+		return;
+	}
+	setBrushSize(value);
+}
+
+function setBrushSize(value) {
+	brushSize = value;
+	brushSizeEl.value = value;
+	resizeEl.value = value;
 	setCursorSize();
+}
+
+function handleBrushSizeScroll(e) {
+	e.preventDefault();
+	let value = Number(e.target.value);
+
+	if (e.deltaY > 0 && value < 100) {
+		value += 1;
+	} else if (e.deltaY < 0 && value > 1) {
+		value -= 1;
+	}
+
+	if (brushSize !== value) setBrushSize(value);
 }
 
 function updateColor(event) {
@@ -193,6 +237,7 @@ function setTool(event) {
 	if (!liElement) return;
 
 	const toolId = liElement.id;
+	if (toolId === selectedTool) return;
 	const allToolElements = event.currentTarget.children;
 
 	[...allToolElements].forEach(toolElement => {
@@ -229,7 +274,7 @@ function updateCursor() {
 		selectedTool === 'triangle' ||
 		selectedTool === 'circle'
 	) {
-		canvas.style.cursor = 'move';
+		canvas.style.cursor = 'crosshair';
 		cursor.style.backgroundColor = color;
 	} else if (selectedTool === 'eraser') {
 		canvas.style.cursor = 'none';

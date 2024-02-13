@@ -15,12 +15,18 @@
 			</div>
 			<div class="panel">
 				<div class="settings">
-					<h2 class="title">Settings</h2>
-					<input id="color-picker" type="color" value="#73E2CC" />
-					<input id="resize" type="range" min="1" max="100" value="10" />
+					<label class="color-picker-label">
+						<span>Color</span>
+						<input id="color-picker" type="color" value="#73E2CC" />
+					</label>
+					<label class="brush-size">
+						<span>Size</span>
+						<input id="brush-size" type="number" min="1" max="100" value="10" />
+						<input id="resize" type="range" min="1" max="100" value="10" />
+					</label>
 				</div>
 
-				<div class="row">
+				<div class="tool-block">
 					<h2 class="title">Tools</h2>
 					<ul class="tools">
 						<li class="tool active" id="pencil">
