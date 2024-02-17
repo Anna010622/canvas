@@ -13,13 +13,14 @@ const toolsEl = document.querySelector('.tools');
 const history = [];
 const maxHistoryLength = 15;
 const canvasBGColor = '#ffffff';
+let canvasPosition = canvas.getBoundingClientRect();
 let historyIndex;
 let brushSize = resizeEl.value;
 let color = colorPickerEl.value;
 let isDrawing = false;
 let selectedTool = 'pencil';
-let cursorX;
-let cursorY;
+let initialCursorPositionX;
+let initialCursorPositionY;
 let lastSnapshot;
 
 const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true });
@@ -36,6 +37,7 @@ window.addEventListener('resize', () => {
 	) {
 		setCanvasSize();
 	}
+	canvasPosition = canvas.getBoundingClientRect();
 	setCanvasBackground();
 	const imgData = history[history.length - 1];
 	if (imgData) ctx.putImageData(imgData, 0, 0);
@@ -47,11 +49,45 @@ resizeEl.addEventListener('change', handleBrushSizeInput);
 colorPickerEl.addEventListener('input', updateColor);
 toolsEl.addEventListener('click', setTool);
 
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mouseout', handleMouseout);
-canvas.addEventListener('mouseenter', handleMouseenter);
+canvas.addEventListener('mousedown', e => {
+	startDrawing(e.offsetX, e.offsetY);
+});
+canvas.addEventListener('mousemove', e => {
+	draw(e.offsetX, e.offsetY);
+	drawCursor(e.offsetX, e.offsetY);
+});
+canvas.addEventListener('mouseup', e => {
+	stopDrawing(e.offsetX, e.offsetY);
+});
+canvas.addEventListener('mouseout', e => {
+	handleMouseout(e.offsetX, e.offsetY);
+});
+canvas.addEventListener('mouseenter', e => {
+	handleMouseenter(e.offsetX, e.offsetY);
+});
+
+canvas.addEventListener('touchstart', e => {
+	if (e.cancelable) e.preventDefault();
+	startDrawing(
+		e.changedTouches[0].pageX - canvasPosition.x,
+		e.changedTouches[0].pageY - canvasPosition.y
+	);
+});
+canvas.addEventListener('touchend', e => {
+	if (e.cancelable) e.preventDefault();
+	stopDrawing(
+		e.changedTouches[0].pageX - canvasPosition.x,
+		e.changedTouches[0].pageY - canvasPosition.y
+	);
+});
+
+canvas.addEventListener('touchmove', e => {
+	if (e.cancelable) e.preventDefault();
+	draw(
+		e.changedTouches[0].pageX - canvasPosition.x,
+		e.changedTouches[0].pageY - canvasPosition.y
+	);
+});
 
 clearBtnEl.addEventListener('click', clearCanvas);
 backBtnEl.addEventListener('click', returnPreviousImage);
@@ -82,46 +118,46 @@ function clearCanvas() {
 	history.length = 0;
 }
 
-function startDrawing(event) {
+function startDrawing(x, y) {
 	isDrawing = true;
 	lastSnapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-	cursorX = event.offsetX;
-	cursorY = event.offsetY;
+	initialCursorPositionX = x;
+	initialCursorPositionY = y;
+
 	if (
 		selectedTool === 'brush' ||
 		selectedTool === 'pencil' ||
 		selectedTool === 'eraser'
 	) {
-		drawDot(event);
+		drawDot(x, y);
 	}
 	ctx.lineWidth = brushSize;
 	ctx.strokeStyle = selectedTool === 'eraser' ? canvasBGColor : color;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 	ctx.beginPath();
-	ctx.moveTo(cursorX, cursorY);
+	ctx.moveTo(initialCursorPositionX, initialCursorPositionY);
 }
 
-function draw(event) {
-	drawCursor(event);
+function draw(x, y) {
 	if (!isDrawing) return;
 	if (selectedTool === 'pencil' || selectedTool === 'eraser') {
-		ctx.lineTo(event.offsetX, event.offsetY);
+		ctx.lineTo(x, y);
 		ctx.stroke();
 	} else if (selectedTool === 'brush') {
-		drawDot(event);
+		drawDot(x, y);
 	} else if (selectedTool === 'rectangle') {
 		ctx.putImageData(lastSnapshot, 0, 0);
-		drawRectangle(event);
+		drawRectangle(x, y);
 	} else if (selectedTool === 'line') {
 		ctx.putImageData(lastSnapshot, 0, 0);
-		drawLine(event);
+		drawLine(x, y);
 	} else if (selectedTool === 'triangle') {
 		ctx.putImageData(lastSnapshot, 0, 0);
-		drawTriangle(event);
+		drawTriangle(x, y);
 	} else if (selectedTool === 'circle') {
 		ctx.putImageData(lastSnapshot, 0, 0);
-		drawCircle(event);
+		drawCircle(x, y);
 	}
 }
 
@@ -132,40 +168,50 @@ function stopDrawing() {
 	historyIndex = history.length - 1;
 }
 
-function drawDot(event) {
-	let x = event.offsetX;
-	let y = event.offsetY;
+function drawDot(x, y) {
 	ctx.fillStyle = selectedTool === 'eraser' ? canvasBGColor : color;
 	ctx.beginPath();
 	ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
 	ctx.fill();
 }
 
-function drawCircle(e) {
+function drawCircle(x, y) {
 	const radius = Math.sqrt(
-		Math.pow(cursorX - e.offsetX, 2) + Math.pow(cursorY - e.offsetY, 2)
+		Math.pow(initialCursorPositionX - x, 2) +
+			Math.pow(initialCursorPositionY - y, 2)
 	);
 	ctx.beginPath();
-	ctx.arc(cursorX, cursorY, radius, 0, Math.PI * 2);
+	ctx.arc(
+		initialCursorPositionX,
+		initialCursorPositionY,
+		radius,
+		0,
+		Math.PI * 2
+	);
 	ctx.stroke();
 }
 
-function drawRectangle(e) {
-	ctx.strokeRect(cursorX, cursorY, e.offsetX - cursorX, e.offsetY - cursorY);
+function drawRectangle(x, y) {
+	ctx.strokeRect(
+		initialCursorPositionX,
+		initialCursorPositionY,
+		x - initialCursorPositionX,
+		y - initialCursorPositionY
+	);
 }
 
-function drawLine(e) {
+function drawLine(x, y) {
 	ctx.beginPath();
-	ctx.moveTo(cursorX, cursorY);
-	ctx.lineTo(e.offsetX, e.offsetY);
+	ctx.moveTo(initialCursorPositionX, initialCursorPositionY);
+	ctx.lineTo(x, y);
 	ctx.stroke();
 }
 
-function drawTriangle(e) {
+function drawTriangle(x, y) {
 	ctx.beginPath();
-	ctx.moveTo(cursorX, cursorY);
-	ctx.lineTo(e.offsetX, e.offsetY);
-	ctx.lineTo(cursorX * 2 - e.offsetX, e.offsetY);
+	ctx.moveTo(initialCursorPositionX, initialCursorPositionY);
+	ctx.lineTo(x, y);
+	ctx.lineTo(initialCursorPositionX * 2 - x, y);
 	ctx.closePath();
 	ctx.stroke();
 }
@@ -262,9 +308,9 @@ function handleMouseenter() {
 	document.removeEventListener('mouseup', stopDrawing);
 }
 
-function drawCursor(e) {
-	cursor.style.top = `${e.offsetY - brushSize / 2}px`;
-	cursor.style.left = `${e.offsetX - brushSize / 2}px`;
+function drawCursor(x, y) {
+	cursor.style.top = `${y - brushSize / 2}px`;
+	cursor.style.left = `${x - brushSize / 2}px`;
 }
 
 function updateCursor() {
