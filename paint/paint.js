@@ -9,6 +9,7 @@ const backBtnEl = document.querySelector('#back-btn');
 const forwardBtnEl = document.querySelector('#forward-btn');
 const saveBtnEl = document.querySelector('#save-btn');
 const toolsEl = document.querySelector('.tools');
+const toggleBtnEl = document.querySelector('.toggle-btn');
 
 const history = [];
 const maxHistoryLength = 15;
@@ -41,6 +42,10 @@ window.addEventListener('resize', () => {
 	setCanvasBackground();
 	const imgData = history[history.length - 1];
 	if (imgData) ctx.putImageData(imgData, 0, 0);
+
+	if (window.innerWidth >= 1200) {
+		toggleBtnEl.classList.remove('close');
+	}
 });
 
 brushSizeEl.addEventListener('change', handleBrushSizeInput);
@@ -51,6 +56,7 @@ toolsEl.addEventListener('click', setTool);
 
 canvas.addEventListener('mousedown', e => {
 	startDrawing(e.offsetX, e.offsetY);
+	hideToggleBtn();
 });
 canvas.addEventListener('mousemove', e => {
 	draw(e.offsetX, e.offsetY);
@@ -58,6 +64,7 @@ canvas.addEventListener('mousemove', e => {
 });
 canvas.addEventListener('mouseup', e => {
 	stopDrawing(e.offsetX, e.offsetY);
+	showToggleBtn();
 });
 canvas.addEventListener('mouseout', e => {
 	handleMouseout(e.offsetX, e.offsetY);
@@ -72,6 +79,7 @@ canvas.addEventListener('touchstart', e => {
 		e.changedTouches[0].pageX - canvasPosition.x,
 		e.changedTouches[0].pageY - canvasPosition.y
 	);
+	hideToggleBtn();
 });
 canvas.addEventListener('touchend', e => {
 	if (e.cancelable) e.preventDefault();
@@ -79,6 +87,7 @@ canvas.addEventListener('touchend', e => {
 		e.changedTouches[0].pageX - canvasPosition.x,
 		e.changedTouches[0].pageY - canvasPosition.y
 	);
+	showToggleBtn();
 });
 
 canvas.addEventListener('touchmove', e => {
@@ -87,12 +96,14 @@ canvas.addEventListener('touchmove', e => {
 		e.changedTouches[0].pageX - canvasPosition.x,
 		e.changedTouches[0].pageY - canvasPosition.y
 	);
+	hideToggleBtn();
 });
 
 clearBtnEl.addEventListener('click', clearCanvas);
 backBtnEl.addEventListener('click', returnPreviousImage);
 forwardBtnEl.addEventListener('click', returnNextImage);
 saveBtnEl.addEventListener('click', saveImage);
+toggleBtnEl.addEventListener('click', togglePanel);
 document.addEventListener('keydown', e => {
 	if (e.altKey && e.ctrlKey && e.code === 'KeyZ') {
 		returnNextImage();
@@ -338,4 +349,16 @@ function setCursorSize() {
 
 function setCursorBGColor() {
 	cursor.style.backgroundColor = color;
+}
+
+function togglePanel() {
+	toggleBtnEl.classList.toggle('close');
+}
+
+function hideToggleBtn() {
+	toggleBtnEl.classList.add('hidden');
+}
+
+function showToggleBtn() {
+	toggleBtnEl.classList.remove('hidden');
 }
