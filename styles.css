@@ -6,31 +6,154 @@
 
 body {
 	height: 100vh;
-	overflow-y: hidden;
-}
-
-canvas {
-	width: 100vw;
-	height: 100vh;
 }
 
 #canvas1 {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: -1;
 	background-color: #031d42;
 }
 
 .links {
 	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+
+	margin: auto;
+	padding: 50px 15px 50px;
+	width: 80%;
+	max-width: 1400px;
+
 	list-style: none;
+	width: fit-content;
 }
 
-a {
+.item {
+	position: relative;
+	flex-basis: 100%;
+	min-width: 285px;
+	max-width: 330px;
+	height: 230px;
+	border-radius: 20px;
+	background-color: rgba(208, 222, 21, 1);
+	border: 2px solid rgba(208, 222, 21, 1);
+	overflow: hidden;
+	transition: scale 300ms linear;
+
+	&:hover {
+		scale: 1.1;
+	}
+
+	@media screen and (min-width: 768px) {
+		& {
+			flex-basis: calc((100% - 1 * 20px) / 2);
+		}
+	}
+
+	@media screen and (min-width: 1200px) {
+		& {
+			flex-basis: calc((100% - 3 * 20px) / 4);
+		}
+	}
+}
+
+.item a {
 	font-size: 24px;
-	color: white;
+	color: #000000;
 	cursor: pointer;
+	text-decoration: none;
+}
+
+.image {
+	height: 100%;
+	background-size: cover;
+	background-position: center;
+}
+.image.constellation {
+	background-image: url(./assets/main-page/constellation.jpg);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/constellation.gif);
+	}
+}
+
+.image.christmas {
+	background-image: url(./assets/main-page/christmas.jpg);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/christmas.gif);
+	}
+}
+
+.image.canvas-craft {
+	background-image: url(./assets/main-page/canvasCraft.png);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/canvas-craft.gif);
+	}
+}
+
+.image.mouse-trail {
+	background-image: url(./assets/main-page/mouseTrail.png);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/mouseTrail.gif);
+	}
+}
+
+.image.particles {
+	background-image: url(./assets/main-page/particles.png);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/particles.gif);
+	}
+}
+
+.image.snow {
+	background-image: url(./assets/main-page/snow.png);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/snow.gif);
+	}
+}
+
+.image.bubbles {
+	background-image: url(./assets/main-page/bubbles.png);
+
+	.item:hover & {
+		background-image: url(./assets/main-page/bubbles.gif);
+	}
+}
+
+.text-wrap {
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: end;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0) 55%,
+		rgba(208, 222, 21, 0.4) 70%,
+		rgba(208, 222, 21, 1) 100%
+	);
+
+	transition: opacity 300ms linear;
+
+	.item:hover & {
+		opacity: 0;
+	}
+}
+.text-wrap span {
+	font-weight: 600;
 }

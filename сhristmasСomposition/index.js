@@ -5,7 +5,7 @@ const formEl = document.querySelector('.form');
 const titleEl = document.querySelector('.title');
 const preloaderEl = document.querySelector('.preloader');
 const bodyBackground = new Image();
-bodyBackground.src = '../assets/winter-background.svg';
+bodyBackground.src = '../assets/christmas/winter-background.svg';
 
 let clicked = false;
 let inputText = '';
@@ -16,9 +16,7 @@ formEl.addEventListener('submit', e => {
 		clicked = true;
 		titleEl.className = 'hidden';
 		formEl.className = 'hidden';
-		// inputText = '';
 	}
-	console.log(formEl[0].value);
 });
 
 function animate() {

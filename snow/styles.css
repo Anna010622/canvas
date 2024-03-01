@@ -12,14 +12,14 @@ body {
 	background-position-y: top;
 	background-position-x: center;
 	background-size: cover;
-	background-image: url(../assets/northern-lights_640.jpg);
+	background-image: url(../assets/snow/northern-lights_640.jpg);
 
 	@media screen and (min-width: 640px) {
-		background-image: url(../assets/northern-lights.jpg);
+		background-image: url(../assets/snow/northern-lights.jpg);
 	}
 
 	@media screen and (min-width: 1200px) {
-		background-image: url(../assets/northern-lights_1920.jpg);
+		background-image: url(../assets/snow/northern-lights_1920.jpg);
 	}
 }
 

@@ -2,9 +2,9 @@ const canvas = document.getElementById('snowman');
 const ctx = canvas.getContext('2d');
 
 const snowmanBody = new Image();
-snowmanBody.src = '../assets/snowman2.svg';
+snowmanBody.src = '../assets/christmas/snowman2.svg';
 const snowmanNose = new Image();
-snowmanNose.src = '../assets/nose.svg';
+snowmanNose.src = '../assets/christmas/nose.svg';
 
 const scaleFactor = 2;
 const snowmanWidth = 200 * scaleFactor;

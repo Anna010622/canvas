@@ -4,7 +4,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const particles = [];
 const image = new Image();
-image.src = '../assets/snowflake.png';
+image.src = '../assets/christmas/snowflake.png';
 const frameSize = 500;
 let particleCount = 0;
 
